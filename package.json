@@ -1,11 +1,11 @@
 {
   "name": "nigercockmusic",
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "start": "node ./node_server/index.js"
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^1.0.0-next.11",
@@ -16,6 +16,7 @@
     "@easyroute/svelte": "^3.2.0",
     "gun": "^0.2020.1235",
     "marx-css": "^3.0.8",
-    "xp.css": "^0.2.4"
+    "xp.css": "^0.2.4",
+    "ytdl-core": "^4.9.1"
   }
 }
