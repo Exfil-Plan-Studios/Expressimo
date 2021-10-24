@@ -1,9 +1,34 @@
 <script>
   import {user, username} from '../user';
+  import SearchItems from './SearchItems.svelte';
+  import {storeResults} from '../store';
+  import routes from '../apiRoutes';
+
+  let searchText = "";
+  let resultContainer;
+
+  // Default List if empty
+  $storeResults = [
+    {id: 0, title: "No Data"}
+  ]
+
 
   function logout(){
     user.leave();
     username.set('');
+  }
+
+  async function search(){
+    $storeResults = [];
+    const response = await routes.search(searchText);
+    let results = response.items.slice(0, 10);
+    console.log(results);
+    let l = $storeResults.length;
+    for(let item of results){
+      l++;
+      $storeResults[l - 1] = {id: item.id, title: item.title};
+      
+    }
   }
 </script>
 
@@ -25,13 +50,20 @@
 
       <article role="tabpanel" id="music" class="container">
         <fieldset>
+          <div class="field-row" style="margin-bottom: 2em;">
+            <label for="search">Search</label>
+            <input id="search" type="text" bind:value={searchText} style="border: 1px solid #7f9db9; width: 20em;"/>
+            <button on:click={search}>Search Music</button>
+          </div>
+          
           <legend>Your saved music</legend>
-          <ul class="tree-view">
-            <li>Meni Me Joley</li>
-            <li>YOASOBI「怪物」</li>
-            <li>CHRIST DILLINGER - STRAIGHT TO HELL</li>
-            <li>Mobb Deep - Shook Ones, Pt. II</li>
+          <ul class="tree-view" bind:this={resultContainer}>
+            {#each $storeResults as item}
+              <li><svelte:component this={SearchItems} objAttr={item}/></li>
+            {/each}
           </ul>
+
+          
         </fieldset>
         <fieldset>
           <legend>Currently Playing</legend>
