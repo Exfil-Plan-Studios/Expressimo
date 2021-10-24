@@ -42,6 +42,7 @@
 
   onMount(() => {
     audio = document.getElementById("media");
+    document.getElementById('playBTN').disabled = true;
   });
 
   // Default List if empty
@@ -74,10 +75,13 @@
     thumbnail = data.thumbs;
     musicTitle = data.title;
     musicSrc = `http://localhost:8001/api/play/${data.id}`;
+    document.getElementById('playBTN').disabled = true;
     audioControls.loaded = false;
+    audioControls.playing = false;
     // @ts-ignore
     audio.load();
     // get the range
+    
     audio.addEventListener("loadedmetadata", function () {
       const duration = audio.duration;
       const minutes = duration / 60;
@@ -86,7 +90,9 @@
       audioControls.range = duration;
 
       audioControls.loaded = true;
+      document.getElementById('playBTN').disabled = false;
     });
+
     return data;
   }
 
@@ -98,6 +104,19 @@
         audio.play();
       } else {
         audio.pause();
+      }
+    }
+  }
+
+  function stop(){
+    if (audioControls.loaded) {
+      if (audioControls.playing) {
+        audio.pause();
+        audio.currentTime = 0;
+        audioControls.playing = false;
+      } else {
+        audio.currentTime = 0;
+        audioControls.playing = false;
       }
     }
   }
@@ -173,13 +192,13 @@
               >
             </div>
             <div class="field-row" style="width: 150px; margin-top: 1em;">
-              <button on:click={play}
+              <button on:click={play} id="playBTN"
                 ><img
                   src={audioControls.playing ? control_pause : control_play}
                   alt="play"
                 /></button
               >
-              <button><img src={control_stop} alt="stop" /></button>
+              <button on:click={stop}><img src={control_stop} alt="stop" /></button>
             </div>
             <div class="field-row" style="width: 300px">
               <audio controls id="media" on:timeupdate={timeupdate} hidden>
