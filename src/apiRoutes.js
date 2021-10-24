@@ -13,6 +13,15 @@ const routes = {
 		});
 	},
 
+    play: async (videoID) => {
+		return await APIRequest({
+			url: `api/play/${videoID}`,
+			method: "GET",
+		}).then((r) => {
+			return r.data;
+		});
+	},
+
 }
 
 export default routes;
