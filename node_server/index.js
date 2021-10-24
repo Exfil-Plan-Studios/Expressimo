@@ -9,9 +9,6 @@ const express = require('express')
 const app = express()
 const port = 8001
 const cors = require('cors');
-const bodyParser = require('body-parser');
-const { start } = require('repl');
-const { async } = require('regenerator-runtime');
 
 app.use(cors());
 app.use(express.urlencoded({extended: true}));
