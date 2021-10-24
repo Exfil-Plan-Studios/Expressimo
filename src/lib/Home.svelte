@@ -103,7 +103,12 @@
   }
 
   function timeupdate(){
+    audioControls.currentTime = this.currentTime
     audioControls.currentPos = format_duration(this.currentTime)
+  }
+
+  function seek(){
+    audio.currentTime = this.value
   }
 </script>
 
@@ -160,7 +165,8 @@
                 type="range"
                 min="0"
                 max={audioControls.range}
-                value="1"
+                value={audioControls.currentTime}
+                on:change={seek}
               />
               <label for="range27"
                 >{audioControls.range !== 0 ? audioControls.end : "0:00"}</label
@@ -176,7 +182,7 @@
               <button><img src={control_stop} alt="stop" /></button>
             </div>
             <div class="field-row" style="width: 300px">
-              <audio controls id="media" on:timeupdate={timeupdate}>
+              <audio controls id="media" on:timeupdate={timeupdate} hidden>
                 <source src={musicSrc} id="audioSrc" type="audio/webm" />
               </audio>
             </div>
