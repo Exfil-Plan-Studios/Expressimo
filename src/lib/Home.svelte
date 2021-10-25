@@ -42,7 +42,7 @@
 
   onMount(() => {
     audio = document.getElementById("media");
-    document.getElementById('playBTN').disabled = true;
+    document.getElementById("playBTN").disabled = true;
   });
 
   // Default List if empty
@@ -75,13 +75,11 @@
     thumbnail = data.thumbs;
     musicTitle = data.title;
     musicSrc = `http://localhost:8001/api/play/${data.id}`;
-    document.getElementById('playBTN').disabled = true;
     audioControls.loaded = false;
     audioControls.playing = false;
+    document.getElementById("playBTN").disabled = true;
     // @ts-ignore
     audio.load();
-    // get the range
-    
     audio.addEventListener("loadedmetadata", function () {
       const duration = audio.duration;
       const minutes = duration / 60;
@@ -90,7 +88,7 @@
       audioControls.range = duration;
 
       audioControls.loaded = true;
-      document.getElementById('playBTN').disabled = false;
+      document.getElementById("playBTN").disabled = false;
     });
 
     return data;
@@ -98,17 +96,25 @@
 
   function play() {
     audioControls.playing = !audioControls.playing;
-
+    let playPromise = audio.play();
     if (audioControls.loaded) {
       if (audioControls.playing) {
-        audio.play();
-      } else {
-        audio.pause();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            audio.play();
+          });
+        }
+      }else{
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            audio.pause();
+          });
+        }
       }
     }
   }
 
-  function stop(){
+  function stop() {
     if (audioControls.loaded) {
       if (audioControls.playing) {
         audio.pause();
@@ -121,13 +127,13 @@
     }
   }
 
-  function timeupdate(){
-    audioControls.currentTime = this.currentTime
-    audioControls.currentPos = format_duration(this.currentTime)
+  function timeupdate() {
+    audioControls.currentTime = this.currentTime;
+    audioControls.currentPos = format_duration(this.currentTime);
   }
 
-  function seek(){
-    audio.currentTime = this.value
+  function seek() {
+    audio.currentTime = this.value;
   }
 </script>
 
@@ -178,7 +184,11 @@
             <img src={thumbnail} alt="poster" width="180" />
             <p>{musicTitle}</p>
             <div class="field-row" style="width: 300px">
-              <label for="range26">{audioControls.range !== 0 ? audioControls.currentPos : "0:00"}</label>
+              <label for="range26"
+                >{audioControls.range !== 0
+                  ? audioControls.currentPos
+                  : "0:00"}</label
+              >
               <input
                 id="range26"
                 type="range"
@@ -198,7 +208,9 @@
                   alt="play"
                 /></button
               >
-              <button on:click={stop}><img src={control_stop} alt="stop" /></button>
+              <button on:click={stop}
+                ><img src={control_stop} alt="stop" /></button
+              >
             </div>
             <div class="field-row" style="width: 300px">
               <audio controls id="media" on:timeupdate={timeupdate} hidden>
